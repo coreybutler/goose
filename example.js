@@ -1,7 +1,14 @@
 var sys				= require('sys'),
-	MongoDatabase 	= require('./mdb'),
+	MDB				= require('./model'),
+	cfg				= {
+							server:		'localhost',
+							port:		27017,
+							database:	'myDataStore',
+							username:	'user',
+							password:	'xxxxxxxx'
+					},
 
-	database 		= new MongoDatabase({
+	database 		= new MDB({
 						server: config.server,
 						port:	config.port,
 						store:	config.database,
