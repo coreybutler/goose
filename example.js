@@ -1,21 +1,14 @@
-var sys				= require('sys'),
+var	sys				= require('sys'),
 	MDB				= require('./model'),
-	cfg				= {
-							server:		'localhost',
-							port:		27017,
-							database:	'myDataStore',
-							username:	'user',
-							password:	'xxxxxxxx'
-					},
 
 	database 		= new MDB({
-						server: config.server,
-						port:	config.port,
-						store:	config.database,
-						username: config.username || '',
-						password: config.password || '',
-						debug:true,
-						autoConnect: true
+						server:		'127.0.0.1',
+						port:		27017,
+						store:		'myDataStore',
+						username:	'username' || '',
+						password:	'password' || '',
+						debug:		true,
+						autoConnect:true
 					});
 
 //Dump all posts to the console

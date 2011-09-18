@@ -27,25 +27,18 @@ and a schema directory. Each schema gets its own file. In the stock example, two
 MDB automatically opens a connection and registers all schema models in the schema directory. This allows you to quickly
 create queries or save new objects in your data store.
 
-	var sys				= require('sys'),
-		MongoDatabase 	= require('./model'),
-		cfg				= {
-							server:		'localhost',
-							port:		27017,
-							database:	'myDataStore',
-							username:	'user',
-							password:	'xxxxxxxx'
-						};
-	
-		database 		= new MongoDatabase({
-							server: config.server,
-							port:	config.port,
-							store:	config.database,
-							username: config.username || '',
-							password: config.password || '',
-							debug:true,
-							autoConnect: true
-						});
+	var	sys			= require('sys'),
+	MDB				= require('./model'),
+
+	database 		= new MDB({
+						server:		'127.0.0.1',
+						port:		27017,
+						store:		'myDataStore',
+						username:	'username' || '',
+						password:	'password' || '',
+						debug:		true,
+						autoConnect:true
+					});
 	
 	//Dump all posts to the console
 	//The database object contains an object called Collections where all schemas are stored.
