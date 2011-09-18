@@ -28,7 +28,14 @@ MDB automatically opens a connection and registers all schema models in the sche
 create queries or save new objects in your data store.
 
 	var sys				= require('sys'),
-		MongoDatabase 	= require('./mdb'),
+		MongoDatabase 	= require('./model'),
+		cfg				= {
+							server:		'localhost',
+							port:		27017,
+							database:	'myDataStore',
+							username:	'user',
+							password:	'xxxxxxxx'
+						};
 	
 		database 		= new MongoDatabase({
 							server: config.server,
@@ -51,7 +58,7 @@ There are several options you can use, and the source code is pretty small. Take
 
 # Where to go from here?
 
-If you use this, let me know. This is just an approach I came up with while working on multiple projects simultaneously.
+If you use this, let me know. This is just an approach I came up with while working on projects.
 I kept forgetting about schemas, recreating them, or simply keeping a reference of which schemas I was using. This made it
 simple... open a directory and see which schemas exist. I haven't really looked into the efficiency of this approach, but 
 I know there are some areas for improvement. However; for most purposes, I have found this to be an easy way to organize
