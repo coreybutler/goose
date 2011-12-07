@@ -29,8 +29,8 @@ MDB automatically opens a connection and registers all schema models in the sche
 create queries or save new objects in your data store.
 
 ```js
-var	sys			= require('sys'),
-MDB				= require('./model'),
+var	sys			= require('util'),
+MDB				= require('./model').Database,
 
 database 		= new MDB({
 					server:		'127.0.0.1', //This can be an array of replica set servers or a comma delimited list.
@@ -52,14 +52,6 @@ database.data.BlogPost.find({}, function( err, docs ) {
 
 There are several options you can use, and the source code is pretty small. Take a look at it.
 
-_If you use more than MongoDB for your model..._
-If the "M" (model) of your MVC application uses more than MongoDB, you can isolate MongoDB by creating a directory within
-your model directory and moving all of the files into it. For example, you may create a directory called mdb as a child of the
-model directory. This would change the above example code, specifically line #2, to read like:
-
-	MDB = require('./model/mdb');
-
-If this doesn't work immediately, you may also need to modify index.js.
 
 # Where to go from here?
 
