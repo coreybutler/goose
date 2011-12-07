@@ -6,8 +6,7 @@
  * TODO: Add a logging feature. 
  */
 var EventEmitter 	= require('events').EventEmitter,
-	mdb				= require('mongoose'),
-	SchemaModel		= require('./');
+	mongoose		= require('mongoose');
 
 
 
@@ -17,8 +16,25 @@ module.exports = exports = Database;
 
 
 /**
- * @property {Boolean} connected Indicates whether the connection 
+ * @param {Object} config Configuration object. Typically used to identify connection parameters.
+ * @property {Boolean} ignoreAlreadyConnected Ignore errors and use the current connection if it is already connected. Defaults to false.
+ * @property {Boolean} debug Debugging flag. Output is delivered to the console.
+ * @property {String} username MongoDB connection username.
+ * @property {String} password MongoDB connection password.
+ * @property {Object} Schema The raw mongoose schema object.
+ * @property {Object} connection The raw mongoose connection object.
+ * @property {Boolean} connected Indicates whether a connection is established.
+ * @property {Object} data Schema or collection container. This contains all of the data object definitions in the model directory which are included dynamically at runtime.
+ * @property {Number} port The port number used in the MongoDB connection. Defaults to 27017.
+ * @property {String} protocol The protocol/prefix used to connect (mongodb://).
+ * @property {Number} timeout The number of seconds before a connection times out when attempting to connect. Defaults to 3.
+ * @property {Boolean} timedout Indicates the connection has timed out.
+ * @property {Boolean} autoConnect This is a configuration attribute carried through to help preserve preference. It indicates whether the connection should be automatically attempted without explicitly calling the connect method. 
  * has been established.
+ * @property {Object} server The host server(s) used to connect to an instance or replica set.
+ * @property {Boolean} redundant Indicates the instance is redundant.
+ * @property {String} store The MongoDB store/database.
+ * @property {String} connectString The connection string used to connect to the MongoDB instance. 
  */
 function Database ( config ) {
 
@@ -26,13 +42,13 @@ function Database ( config ) {
 	this.debug					= config.debug			|| false;
 	this.username				= config.username		|| '';
 	this.password				= config.password		|| '';
-	this.Schema					= mdb.Schema;
-	this.connection				= mdb.connection;
+	this.Schema					= mongoose.Schema;
+	this.connection				= mongoose.connection;
 	this.connection.parent		= this;
 	this.connected				= false;
 	this.connecting				= false;
-	this.Collections			= config.model			|| {};
-	this.port					= config.port			|| null;
+	this.data					= config.model			|| {};
+	this.port					= config.port			|| 27017;
 	this.protocol				= config.protocol		|| 'mongodb://';
 	this.timeout				= config.timeout*1000	|| 3000;
 	this.timedout				= false;
@@ -172,9 +188,9 @@ Database.prototype.connect = function(callback) {
 		//Connect to the DB
 		this.setConnectionString();
 		if ( this.server.length == 1 )
-			mdb.connect( this.connectString );
+			mongoose.connect( this.connectString );
 		else
-			mdb.connectSet( this.connectString );
+			mongoose.connectSet( this.connectString );
 		
 	} catch (e) {
 		if (this.debug)
@@ -225,10 +241,10 @@ Database.prototype.initializeSchemas = function() {
 				console.log('>> Registering '.green+incomplete[0].green.underline);
 			
 			//Register the data model
-			mdb.model( incomplete[0], SchemaModel[incomplete[0]] );
+			mongoose.model( incomplete[0], SchemaModel[incomplete[0]] );
 			
 			//Get the registered schema for application use
-			this.Collections[incomplete[0]] = mdb.model( incomplete[0] );
+			this.Collections[incomplete[0]] = mongoose.model( incomplete[0] );
 		
 			//Remove the model once it's complete
 			incomplete.shift();
@@ -259,7 +275,7 @@ Database.prototype.disconnect = function() {
 	if (this.debug)
 		console.log('Disconnecting from database.'.yellow.underline);
 	try {
-		mdb.disconnect();
+		mongoose.disconnect();
 	} catch (e) {
 		throw new DatabaseConnectionError;
 	}
@@ -274,11 +290,11 @@ Database.prototype.model = function( name, schema ) {
 	if ( typeof schema === 'string' ) {
 		if (this.debug)
 			console.log('Registering '.green.underline+' '+name.cyan+' model'.green);
-		mdb.model( name, schema );
+		mongoose.model( name, schema );
 	} else {
 		if (this.debug)
 			console.log('Retrieving'.cyan.underline+' '+name.cyan.underline+' model'.cyan);
-		return mdb.model( name );
+		return mongoose.model( name );
 	}
 	
 };
@@ -345,8 +361,7 @@ DatabaseModelError.prototype = DatabaseError.prototype;
 /**
  * This is a dynamic loader that includes all of the data model objects.
  */
-var dir		= SchemaModel,
-	files 	= require('fs').readdirSync( dir );
+var files 	= require('fs').readdirSync( __dirname );
 
 files.forEach( function( file ) {
 
