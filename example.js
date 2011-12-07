@@ -13,7 +13,7 @@ var	sys				= require('util'),
 
 //Dump all posts to the console
 //The database object contains an object called Collections where all schemas are stored.
-database.Collections.BlogPost.find({}, function( err, docs ) {
+database.data.BlogPost.find({}, function( err, docs ) {
 	if ( err ) throw err;
 	sys.puts(sys.inspect(docs));
 });

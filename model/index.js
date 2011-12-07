@@ -244,7 +244,7 @@ Database.prototype.initializeSchemas = function() {
 			mongoose.model( incomplete[0], SchemaModel[incomplete[0]] );
 			
 			//Get the registered schema for application use
-			this.Collections[incomplete[0]] = mongoose.model( incomplete[0] );
+			this.data[incomplete[0]] = mongoose.model( incomplete[0] );
 		
 			//Remove the model once it's complete
 			incomplete.shift();
