@@ -28,25 +28,27 @@ the model directory. When a new MDB object is instantiated, it auto-imports all 
 MDB automatically opens a connection and registers all schema models in the schema directory. This allows you to quickly
 create queries or save new objects in your data store.
 
-	var	sys			= require('sys'),
-	MDB				= require('./model'),
+```js
+var	sys			= require('sys'),
+MDB				= require('./model'),
 
-	database 		= new MDB({
-						server:		'127.0.0.1', //This can be an array of replica set servers or a comma delimited list.
-						port:		27017,
-						store:		'myDataStore',
-						username:	'username' || '',
-						password:	'password' || '',
-						debug:		true,
-						autoConnect:true
-					});
-	
-	//Dump all posts to the console
-	//The database object contains an object called Collections where all schemas are stored.
-	database.Collections.BlogPost.find({}, function( err, docs ) {
-		if ( err ) throw err;
-		sys.puts(sys.inspect(docs));
-	});
+database 		= new MDB({
+					server:		'127.0.0.1', //This can be an array of replica set servers or a comma delimited list.
+					port:		27017,
+					store:		'myDataStore',
+					username:	'username' || '',
+					password:	'password' || '',
+					debug:		true,
+					autoConnect:true
+				});
+
+//Dump all posts to the console
+//The database object contains an object called Collections where all schemas are stored.
+database.Collections.BlogPost.find({}, function( err, docs ) {
+	if ( err ) throw err;
+	sys.puts(sys.inspect(docs));
+});
+```
 
 There are several options you can use, and the source code is pretty small. Take a look at it.
 

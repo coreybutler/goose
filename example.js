@@ -1,7 +1,7 @@
-var	sys				= require('sys'),
-	MDB				= require('./model'),
+var	sys				= require('util'),
+	DB				= require('./model').Database,
 
-	database 		= new MDB({
+	database 		= new DB({
 						server:		'127.0.0.1',
 						port:		27017,
 						store:		'myDataStore',
