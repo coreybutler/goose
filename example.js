@@ -1,7 +1,7 @@
 var	sys				= require('util'),
-	DB				= require('./model').Database,
+	Goose			= require('./model'),
 
-	database 		= new DB({
+	database 		= new Goose({
 						server:		'127.0.0.1',
 						port:		27017,
 						store:		'myDataStore',
