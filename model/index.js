@@ -9,7 +9,6 @@ var EventEmitter 	= require('events').EventEmitter,
 	mongoose		= require('mongoose');
 
 
-
 //Exports
 module.exports = exports = Database;
 
@@ -42,6 +41,7 @@ function Database ( config ) {
 	this.debug					= config.debug			|| false;
 	this.username				= config.username		|| '';
 	this.password				= config.password		|| '';
+	this.Schemas				= {};
 	this.Schema					= mongoose.Schema;
 	this.connection				= mongoose.connection;
 	this.connection.parent		= this;
@@ -65,6 +65,9 @@ function Database ( config ) {
 	this.store					= config.store 			|| null;
 	this.connectString			= config.connectString	|| null;
 	
+	
+	if ( this.debug )
+		require('colors');
 	
 
 	//Check for errors with connection string
@@ -203,7 +206,6 @@ Database.prototype.connect = function(callback) {
 };
 
 
-
 //Initialize the data schemas
 Database.prototype.initializeSchemas = function() {
 	
@@ -216,8 +218,23 @@ Database.prototype.initializeSchemas = function() {
 	var incomplete	= new Array,
 		retry		= new Array,
 		max			= 1000,
-		tryCt		= 0;
-		
+		tryCt		= 0
+		files 		= require('fs').readdirSync( __dirname ),
+		SchemaModel	= {};
+
+	//Loop through the schemas and load as modules
+	files.forEach( function( file ) {
+	
+		//Convert filename to array
+		a = file.split('.');
+	
+		//Export the schema object
+		if ( file !== 'index.js' && a[a.length-1].toLowerCase() === 'js' ) {
+			exports[a[0]] = SchemaModel[a[0]] = require( './' + file )[a[0]];
+		}
+	
+	});
+			
 	//Create a list of all the schemas
 	for ( var schema in SchemaModel ) {
 		
@@ -349,27 +366,3 @@ function DatabaseModelError( config ) {
 };
 
 DatabaseModelError.prototype = DatabaseError.prototype;
-
-
-
-
-
-
-
-
-
-/**
- * This is a dynamic loader that includes all of the data model objects.
- */
-var files 	= require('fs').readdirSync( __dirname );
-
-files.forEach( function( file ) {
-
-	//Convert filename to array
-	a = file.split('.');
-
-	//Export the schema object
-	if ( file !== 'index.js' && a[a.length-1].toLowerCase() === 'js' )
-		exports[a[0]] = require( './' + file )[a[0]];
-
-});
