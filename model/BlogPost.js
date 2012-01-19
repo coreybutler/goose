@@ -11,7 +11,7 @@ var Schema 			= require('mongoose').Schema,
  */
 exports.BlogPost = BlogPost = new Schema({
 
-	author    : ObjectId,
+	author    : Schema.ObjectId,
 	title     : String,
 	body      : String,
 	buf       : Buffer,
